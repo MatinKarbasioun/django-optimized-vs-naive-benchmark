@@ -2,10 +2,10 @@ from typing import Optional
 
 from kink import inject
 
-from application.command import CreateCustomerCommand
-from application.handlers.customer_create import CustomerCreationHandler
-from application.handlers.customer_serach import CustomerSearchHandler
-from application.query.search_customer import SearchCustomersQuery
+from crm.application.command import CreateCustomerCommand
+from crm.application.handlers.customer_create import CustomerCreationHandler
+from crm.application.handlers.customer_serach import CustomerSearchHandler
+from crm.application.query.search_customer import SearchCustomersQuery
 from domain import Customer
 from domain.repositories import ICustomerRepository
 from domain.value_objects import CustomerSearchOutput

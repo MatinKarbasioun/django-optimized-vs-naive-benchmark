@@ -2,4 +2,4 @@ __all__ = [
     "Address",
 ]
 
-from application.command.address import Address
+from crm.application.command.address import Address

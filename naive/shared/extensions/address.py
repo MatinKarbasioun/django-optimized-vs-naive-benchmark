@@ -1,4 +1,4 @@
-from application.command import CreateAddressCommand
+from crm.application.command import CreateAddressCommand
 from domain import Address
 
 

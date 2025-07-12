@@ -1,4 +1,4 @@
-from application.query.search_customer import SearchCustomersQuery
+from crm.application.query.search_customer import SearchCustomersQuery
 from domain.repositories import ICustomerRepository
 from domain.value_objects import CustomerSearchOutput
 

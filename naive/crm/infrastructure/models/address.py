@@ -1,18 +1,18 @@
 from django.db import models
 
-from crm.infrastructure.models.base import ExternalModel
+from shared.infrastructure.models.base import ExternalModel
 
 
 class Address(ExternalModel):
     id = models.BigIntegerField(primary_key=True)
-    street = models.CharField(max_length=100)
-    street_number = models.CharField(max_length=100)
-    city_code = models.CharField(max_length=100)
-    city = models.CharField(max_length=100)
-    country = models.CharField(max_length=100)
+    street = models.CharField(max_length=128)
+    street_number = models.CharField(max_length=32)
+    city_code = models.CharField(max_length=32)
+    city = models.CharField(max_length=64)
+    country = models.CharField(max_length=32)
 
     class Meta(ExternalModel.Meta):
-        table_name = 'address'
+        db_table = 'address'
 
 
     def __str__(self):

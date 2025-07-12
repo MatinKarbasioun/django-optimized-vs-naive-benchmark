@@ -4,7 +4,7 @@ from kink import inject
 from django.db import transaction
 from django.db.utils import IntegrityError
 
-from application.command import CreateCustomerCommand
+from crm.application.command import CreateCustomerCommand
 from domain import Customer, CustomerRelationship
 from domain.exceptions import CustomerExistException
 from domain.exceptions.exceptions import CustomerInvalidDataException
