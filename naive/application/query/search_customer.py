@@ -1,0 +1,10 @@
+from dataclasses import dataclass
+
+from domain.value_objects import SearchParams, PaginationParams, SortingParams
+
+
+@dataclass
+class SearchCustomersQuery:
+    criteria: SearchParams
+    pagination: PaginationParams
+    sorting: SortingParams
