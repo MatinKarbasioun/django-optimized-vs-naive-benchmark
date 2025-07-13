@@ -2,7 +2,7 @@ from datetime import datetime
 from dataclasses import dataclass
 from typing import Optional
 
-from domain.entities import Gender
+from crm.domain.entities import Gender
 
 
 @dataclass(frozen=True)

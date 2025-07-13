@@ -2,7 +2,7 @@ import datetime
 from dataclasses import dataclass
 from typing import Optional
 
-from domain.entities import Address, Gender, CustomerRelationship
+from crm.domain.entities import Address, Gender, CustomerRelationship
 
 
 @dataclass
@@ -13,6 +13,6 @@ class Customer:
     gender: Gender
     customer_id: str
     created: datetime
-    address: Address
     birthday: datetime.date
+    address: Optional[Address] = None
     relationship: Optional[CustomerRelationship] = None

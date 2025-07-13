@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from domain.value_objects import SearchParams, PaginationParams, SortingParams
+from crm.domain.value_objects import SearchParams, PaginationParams, SortingParams
 
 
 @dataclass

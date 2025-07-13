@@ -1,5 +1,5 @@
 from crm.application.command import CreateAddressCommand
-from domain import Address
+from crm.domain import Address
 
 
 class CommandToAddress:

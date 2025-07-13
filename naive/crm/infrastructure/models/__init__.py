@@ -1,6 +1,6 @@
-__all__ = ['CustomerRelationship', 'Address', 'AppUser']
+__all__ = ['CustomerRelationshipModel', 'AddressModel', 'AppUserModel']
 
 
-from .customer_relationship import CustomerRelationship
-from .address import Address
-from .app_user import AppUser
+from .customer_relationship import CustomerRelationshipModel
+from .address import AddressModel
+from .app_user import AppUserModel

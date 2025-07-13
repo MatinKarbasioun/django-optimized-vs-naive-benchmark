@@ -6,9 +6,9 @@ from crm.application.command import CreateCustomerCommand
 from crm.application.handlers.customer_create import CustomerCreationHandler
 from crm.application.handlers.customer_serach import CustomerSearchHandler
 from crm.application.query.search_customer import SearchCustomersQuery
-from domain import Customer
-from domain.repositories import ICustomerRepository
-from domain.value_objects import CustomerSearchOutput
+from crm.domain import Customer
+from crm.domain import ICustomerRepository
+from crm.domain.value_objects import CustomerSearchOutput
 
 
 @inject

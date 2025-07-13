@@ -1,13 +1,13 @@
 from abc import ABC, abstractmethod
 from typing import Optional
 
-from domain import Address
+from crm.domain import Address
 
 
 class IAddressRepository(ABC):
 
     @abstractmethod
-    def add(self, address: Address) -> Address:
+    def add(self, address: Address):
         raise NotImplementedError()
 
     @abstractmethod

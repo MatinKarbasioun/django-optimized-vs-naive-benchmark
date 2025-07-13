@@ -3,8 +3,8 @@ from django.db import models
 from shared.infrastructure.models.base import ExternalModel
 
 
-class Address(ExternalModel):
-    id = models.BigIntegerField(primary_key=True)
+class AddressModel(ExternalModel):
+    id = models.BigAutoField(primary_key=True)
     street = models.CharField(max_length=128)
     street_number = models.CharField(max_length=32)
     city_code = models.CharField(max_length=32)

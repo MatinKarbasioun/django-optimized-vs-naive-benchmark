@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
-from typing import List, Optional
+from typing import Optional
 
-from domain import Customer
-from domain.value_objects import SearchParams, PaginationParams, SortingParams, CustomerSearchOutput
+from crm.domain import Customer
+from crm.domain.value_objects import SearchParams, PaginationParams, SortingParams, CustomerSearchOutput
 
 
 class ICustomerRepository(ABC):

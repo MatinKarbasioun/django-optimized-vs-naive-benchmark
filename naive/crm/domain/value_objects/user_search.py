@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import List
 
-from domain import Customer
+from crm.domain import Customer
 
 
 @dataclass(frozen=True)

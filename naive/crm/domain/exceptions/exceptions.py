@@ -10,7 +10,3 @@ class CustomerNotFoundError(DomainException):
 
 class CustomerExistException(DomainException):
     pass
-
-
-class CustomerInvalidDataException(DomainException):
-    pass

@@ -1,6 +1,6 @@
 from crm.application.query.search_customer import SearchCustomersQuery
-from domain.repositories import ICustomerRepository
-from domain.value_objects import CustomerSearchOutput
+from crm.domain import ICustomerRepository
+from crm.domain.value_objects import CustomerSearchOutput
 
 
 class CustomerSearchHandler:

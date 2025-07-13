@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from datetime import date
 
-from domain import Gender
+from crm.domain import Gender
 from .address import CreateAddressCommand
 
 

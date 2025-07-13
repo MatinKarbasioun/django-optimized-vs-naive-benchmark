@@ -5,10 +5,10 @@ from django.db import transaction
 from django.db.utils import IntegrityError
 
 from crm.application.command import CreateCustomerCommand
-from domain import Customer, CustomerRelationship
-from domain.exceptions import CustomerExistException
-from domain.exceptions.exceptions import CustomerInvalidDataException
-from domain.repositories import ICustomerRepository, ICustomerRelationshipRepository, IAddressRepository
+from crm.domain import Customer, CustomerRelationship
+from crm.domain import CustomerExistException
+from crm.domain import CustomerInvalidDataException
+from crm.domain import ICustomerRepository, ICustomerRelationshipRepository, IAddressRepository
 from shared.extensions import CommandToCustomer, CommandToAddress
 
 logger = logging.getLogger(__name__)
@@ -43,7 +43,7 @@ class CustomerCreationHandler:
             logger.debug(f"Customer relationship created with ID: {customer.id}")
 
             customer_relationship = CustomerRelationship.create(command.initial_points)
-            self._customer_repository.add(customer_relationship)
+            self._relationship_repository.add(customer_relationship)
 
             logger.debug(f"Customer relationship created with ID: {customer_relationship.id}")
 
