@@ -13,7 +13,12 @@ class AddressModel(ExternalModel):
 
     class Meta(ExternalModel.Meta):
         db_table = 'address'
+        verbose_name_plural = 'addresses'
 
 
     def __str__(self):
         return f"{self.street}, {self.street_number}, {self.city_code}, {self.city}, {self.country}"
+
+    def __repr__(self):
+        return (f"{self._meta.db_table} {self.id} {self.street}, "
+                f"{self.street_number}, {self.city_code}, {self.city}, {self.country}")

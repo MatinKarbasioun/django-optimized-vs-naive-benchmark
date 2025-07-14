@@ -3,7 +3,7 @@ from django.utils import timezone
 
 from crm.infrastructure.models import AddressModel
 from shared.infrastructure.models.base import ExternalModel
-from crm.domain import Gender
+from crm.domain.value_objects.gender import Gender
 
 
 class AppUserModel(ExternalModel):
@@ -14,12 +14,17 @@ class AppUserModel(ExternalModel):
     customer_id = models.CharField(max_length=32, unique=True)
     phone_number = models.CharField(max_length=32, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
-    address = models.ForeignKey(AddressModel, on_delete=models.CASCADE)
+    address = models.ForeignKey(AddressModel, on_delete=models.CASCADE, null=True, blank=True, related_name='app_user')
     birthday = models.DateField(null=True, blank=True)
     last_updated = models.DateTimeField(default=timezone.now)
 
     class Meta(ExternalModel.Meta):
         db_table = 'app_user'
+        verbose_name_plural = 'app_users'
+        ordering = ['-created']
 
     def __str__(self):
         return f'{self.first_name} {self.last_name} with customer id: {self.customer_id}'
+
+    def __repr__(self):
+        return f"{self._meta.db_table} {self.id} {self.first_name} {self.last_name} with customer id: {self.customer_id}"
