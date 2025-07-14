@@ -8,24 +8,39 @@
 # database or a cache. For examples, see the Awesome Compose repository:
 # https://github.com/docker/awesome-compose
 services:
+  db:
+    image: postgres:latest
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+
+    env_file:
+      - .env.dev
+
+    healthcheck:
+           test: [ "CMD", "pg_isready" ]
+           interval: 10s
+           timeout: 5s
+           retries: 5
   server:
     build:
       context: .
     ports:
       - 8000:8000
 
-    environment:
-      DATABASE_URL:${DATABASE_URL}
-      DJANGO_SECRET_KEY='django-insecure-bvo*2ub+7t&r*5k+^0)w=9t!ze+)hvfn%efe&#ds)zwzj5y44u'
-      DEBUG=True
-      DJANGO_LOGLEVEL=info
-      ALLOWED_HOSTS=127.0.0.1
-      DATABASE_ENGINE=postgresql
-      DATABASE_NAME=crm
-      DATABASE_USERNAME=crm_user
-      DATABASE_PASSWORD='!3#41qszsdse!'
-      DATABASE_HOST=db
-      DATABASE_PORT=5432
+    env_file:
+      - .env
+
+    depends_on:
+      - db
+  nginx:
+    build: ./nginx
+    ports:
+      - 1337:80
+    depends_on:
+      - web
+
+volumes:
+  postgres_data:
 
 # The commented out section below is an example of how to define a PostgreSQL
 # database that your application can use. `depends_on` tells Docker Compose to

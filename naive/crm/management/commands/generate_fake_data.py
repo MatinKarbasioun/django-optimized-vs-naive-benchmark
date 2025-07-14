@@ -2,6 +2,7 @@ import uuid
 
 from django.core.management.base import BaseCommand
 from django.db import transaction
+from django.utils import timezone
 from faker import Faker
 import random
 
@@ -11,16 +12,33 @@ from crm.infrastructure.models import AddressModel, AppUserModel, CustomerRelati
 class Command(BaseCommand):
     help = 'Help to generate fake data'
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            '--customers',
+            type=int,
+            default=1000,
+            help='Specifies the number of customer records to create.'
+        )
+        parser.add_argument(
+            '--batch',
+            type=int,
+            default=50_000,
+            help='Specifies the number of address records to create.'
+        )
+
     def handle(self, *args, **options):
         fake = Faker()
-        batch_size = 10000
+        batch_size = options['batch']
+        customer_num = options['customers']
+        address_size = customer_num//2
 
-        self.stdout.write('Generating test data...')
+        self.stdout.write(
+            f'Generating {customer_num} customers and {address_size} addresses...'
+        )
 
         with transaction.atomic():
-            # Generate addresses
             addresses = []
-            for i in range(100000):
+            for i in range(address_size):
                 address = AddressModel(
                     street=fake.street_name(),
                     street_number=str(fake.building_number()),
@@ -40,9 +58,8 @@ class Command(BaseCommand):
 
             address_ids = list(AddressModel.objects.values_list('id', flat=True))
 
-            # Generate customers
             customers = []
-            for i in range(3000000):
+            for i in range(customer_num):
                 customer = AppUserModel(
                     first_name=fake.first_name(),
                     last_name=fake.last_name(),
@@ -64,16 +81,19 @@ class Command(BaseCommand):
 
             # Generate relationships
             customer_ids = list(AppUserModel.objects.values_list('id', flat=True))
-            selected_customers = random.sample(customer_ids, 2500000)
+            num_to_select = min(len(customer_ids), customer_num)
+            selected_customers = random.sample(customer_ids, num_to_select)
 
             relationships = []
             for customer_id in selected_customers:
-                relationship = CustomerRelationshipModel(
+                activity_time = timezone.make_aware(
+                    fake.date_time_between(start_date='-3y')) if random.random() > 0.2 else None
+
+                relationships.append(CustomerRelationshipModel(
                     appuser_id=customer_id,
-                    points=random.randint(0, 50000),
-                    last_activity=fake.date_time_between(start_date='-2y') if random.random() > 0.2 else None
-                )
-                relationships.append(relationship)
+                    points=random.randint(0, 50_000),
+                    last_activity=activity_time
+                ))
 
                 if len(relationships) >= batch_size:
                     CustomerRelationshipModel.objects.bulk_create(relationships, ignore_conflicts=True)
