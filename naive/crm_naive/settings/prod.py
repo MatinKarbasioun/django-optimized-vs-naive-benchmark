@@ -11,7 +11,7 @@ DEBUG = config("DEBUG", cast=bool, default=False)
 
 ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast=Csv())
 
-ROOT_URLCONF = 'crm_naive.urls'
+ROOT_URLCONF = 'crm_naive.urls.urls'
 
 DATABASES = {
     'default': dj_database_url.parse(
