@@ -3,7 +3,8 @@ from dataclasses import dataclass
 from typing import Optional
 
 from crm.domain.value_objects.gender import Gender
-from . import *
+from .address import Address
+from .relationship import CustomerRelationship
 
 
 @dataclass

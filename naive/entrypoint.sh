@@ -2,8 +2,9 @@
 
 set -e
 
+mkdir -p /app/staticfiles
+
 echo "Applying database migrations..."
 python manage.py migrate --no-input
-python manage.py collectstatic --noinput
 
-exec "$@"
+exec "$@"S

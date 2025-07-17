@@ -1,11 +1,11 @@
 import logging
 
+from django.db.models import QuerySet
 from kink import inject
 
-from crm.application.query.search_customer import SearchCustomersQuery
+from crm.application.query import CustomerSearchQuery
 from crm.domain.repositories import ICustomerRepository
 from crm.domain.exceptions import CustomerInvalidDataException
-from crm.domain.value_objects import CustomerSearchOutput
 
 logger = logging.getLogger(__name__)
 
@@ -16,17 +16,17 @@ class CustomerSearchHandler:
     def __init__(self, customer_repository: ICustomerRepository):
         self._customer_repository = customer_repository
 
-    def handle(self, query: SearchCustomersQuery) -> CustomerSearchOutput:
+    async def handle(self, query: CustomerSearchQuery) -> QuerySet:
         try:
-            result = self._customer_repository.search(
-                query.criteria,
-                query.pagination,
-                query.sorting
+            result = await self._customer_repository.search(
+                query.query,
+                query.sorting.sort_by,
+                query.sorting.ordering
             )
 
             return result
 
         except Exception as e:
-            msg = f'search customer raised error: {e}'
+            msg = f'Search customer raised error: {e}'
             logger.error(msg)
             raise CustomerInvalidDataException(msg)

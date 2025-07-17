@@ -1,51 +1,44 @@
-import time
-from django.db import connection
-from rest_framework import viewsets
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.filters import OrderingFilter, SearchFilter
-from drf_spectacular.utils import extend_schema
+from ninja import Schema, Router, Query
+from ninja.pagination import paginate, PageNumberPagination
 
-from ..filtters import CustomerFilter
-from ..serializers import CustomerSerializer
-from ...infrastructure.models import AppUserModel
+from crm.application.dtos import CustomerSchema
+from crm.application.filtters import CustomerFilter
+from crm.application.handlers import CustomerSearchHandler
+from crm.application.query import CustomerSearchQuery
+from crm.application.query.sorting.Sorting import SortingSchema
+from crm.application.services.customer import CustomerService
+
+customer_router = Router()
+#
+# class PerformanceSchema(Schema):
+#     execution_time: str
+#     query_count: int
+#
+#
+# class AddressSchema(Schema):
+#     street: Optional[str]
+#     street_number: Optional[str]
+#     city: Optional[str]
+#     country: Optional[str]
+#
+#
+# class RelationshipSchema(Schema):
+#     points: Optional[int]
+#     created: Optional[datetime]
+#     last_activity: Optional[datetime]
+#
+#
+# class PaginatedCustomerResponse(Schema):
+#     count: int
+#     items: List[CustomerSchema]
+#     performance: PerformanceSchema
 
 
-
-class CustomerViewSet(viewsets.List):
-
-    serializer_class = CustomerSerializer
-    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_class = CustomerFilter
-    ordering_fields = '__all__'
-    search_fields = '__all__'
-
-    def get_queryset(self):
-        return AppUserModel.objects.select_related(
-            'address', 'relationship'
-        ).only(
-            'id', 'first_name', 'last_name', 'gender', 'customer_id',
-            'phone_number', 'created', 'birthday', 'last_updated',
-            'address__street', 'address__street_number', 'address__city',
-            'address__country', 'relationship__points', 'relationship__created',
-            'relationship__last_activity'
-        )
-
-    @extend_schema(summary="List customers with filtering")
-    def list(self, request, *args, **kwargs):
-        start_time = time.time()
-        queries_before = len(connection.queries)
-
-        response = super().list(request, *args, **kwargs)
-
-        # Add performance metrics
-        execution_time = time.time() - start_time
-        query_count = len(connection.queries) - queries_before
-
-        if isinstance(response.data, dict) and 'results' in response.data:
-            response.data['performance'] = {
-                'execution_time': f"{execution_time:.3f}s",
-                'query_count': query_count,
-                'total_records': response.data.get('count', 0)
-            }
-
-        return response
+@customer_router.get('/customers', response=list[CustomerSchema])
+@paginate(PageNumberPagination, page_size=50)
+async def customers(request, sorting: Query[SortingSchema], filters: CustomerFilter = Query(...)):
+    service = CustomerService(CustomerSearchHandler())
+    return await service.search_customers(CustomerSearchQuery(
+        query=filters.get_filter_expression(),
+        sorting=sorting,
+    ))

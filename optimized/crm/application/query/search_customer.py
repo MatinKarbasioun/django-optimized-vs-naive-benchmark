@@ -1,10 +1,9 @@
-from dataclasses import dataclass
+from typing import NamedTuple
+from django.db.models import Q
 
-from crm.domain.value_objects import SearchParams, PaginationParams, SortingParams
+from crm.application.query.sorting import Sorting
 
 
-@dataclass(frozen=True)
-class SearchCustomersQuery:
-    criteria: SearchParams
-    pagination: PaginationParams
-    sorting: SortingParams
+class CustomerSearchQuery(NamedTuple):
+    query: Q
+    sorting: Sorting

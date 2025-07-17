@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ServiceDesk Service Swagger</title>
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.18.2/swagger-ui.css">
+</head>
+<body>
+
+<div id="swagger-ui"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.18.2/swagger-ui-standalone-preset.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.18.2/swagger-ui-bundle.js"></script>
+<script type="application/json" id="swagger-settings">{{ swagger_settings | safe }}</script>
+<script>
+    window.onload = () => {
+        const baseConfig = {
+          dom_id: '#swagger-ui',
+          presets: [
+            SwaggerUIBundle.presets.apis,
+            SwaggerUIStandalonePreset,
+          ],
+          plugins: [
+            SwaggerUIBundle.plugins.DownloadUrl,
+          ],
+        };
+
+        const configJson = document
+          .querySelector("#swagger-settings")
+          .textContent;
+
+        const configObject = Object.assign(
+          {},
+          JSON.parse(configJson),
+          baseConfig
+        );
+
+        window.ui = SwaggerUIBundle(configObject);
+    };
+</script>
+</body>
+</html>

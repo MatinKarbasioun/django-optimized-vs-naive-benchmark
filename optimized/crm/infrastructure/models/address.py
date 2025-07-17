@@ -16,6 +16,8 @@ class AddressModel(ExternalModel):
         verbose_name_plural = 'addresses'
         indexes = [
             models.Index(fields=['city', 'country']),
+            models.Index(fields=['street', 'street_number']),
+            models.Index(fields=['street', 'city'])
         ]
 
 

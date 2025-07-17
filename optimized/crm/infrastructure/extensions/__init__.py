@@ -4,9 +4,13 @@ __all__ = [
     'CustomerToModel',
     'ModelToCustomer',
     'CustomerRelationshipToModel',
-    'ModelToCustomerRelationship'
+    'ModelToCustomerRelationship',
+    'ToPrefix',
+    'ToQuery'
 ]
 
+from .ordering import ToPrefix
 from .relationship import CustomerRelationshipToModel, ModelToCustomerRelationship
 from .address import AddressToModel, ModelToAddress
+from .sorting import ToQuery
 from .customer import CustomerToModel, ModelToCustomer

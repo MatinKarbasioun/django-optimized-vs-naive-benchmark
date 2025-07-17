@@ -1,5 +1,5 @@
 import logging
-from typing import Callable, Type, Any, Optional
+from typing import Type, Any, Optional, Callable, Awaitable
 
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError, DataError
@@ -9,12 +9,12 @@ from shared.exception import InvalidDataException
 
 logger = logging.getLogger(__name__)
 
-def handle_db_operation(operation_func: Callable,
+async def handle_db_operation(operation_func: Callable[[], Awaitable[Any]],
                       custom_exception: Type[Exception] = InvalidDataException,
                       custom_message: Optional[str] = None) -> Any:
 
     try:
-        return operation_func()
+        return await operation_func()
 
     except IntegrityError as e:
         error_msg = f"{str(operation_func)} failed due to data constraint violation"
