@@ -1,6 +1,6 @@
 from django.db import models
 
-from shared.infrastructure.models.base import ExternalModel
+from shared.base import ExternalModel
 
 
 class AddressModel(ExternalModel):
@@ -11,7 +11,8 @@ class AddressModel(ExternalModel):
     city = models.CharField(max_length=64, db_index=True)
     country = models.CharField(max_length=32, db_index=True)
 
-    class Meta(ExternalModel.Meta):
+    class Meta:
+        managed = True
         db_table = 'address'
         verbose_name_plural = 'addresses'
         indexes = [
@@ -19,6 +20,7 @@ class AddressModel(ExternalModel):
             models.Index(fields=['street', 'street_number']),
             models.Index(fields=['street', 'city'])
         ]
+        abstract = False
 
 
     def __str__(self):

@@ -5,7 +5,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter, SearchFilter
 from drf_spectacular.utils import extend_schema
 
-from ..filtters import CustomerFilter
+from crm.application.filtters import CustomerFilter
 from ..serializers import CustomerSerializer
 from ...infrastructure.models import AppUserModel
 
@@ -20,30 +20,22 @@ class CustomerViewSet(viewsets.ReadOnlyModelViewSet):
     search_fields = '__all__'
 
     def get_queryset(self):
-        return AppUserModel.objects.select_related(
-            'address', 'relationship'
-        ).only(
-            'id', 'first_name', 'last_name', 'gender', 'customer_id',
-            'phone_number', 'created', 'birthday', 'last_updated',
-            'address__street', 'address__street_number', 'address__city',
-            'address__country', 'relationship__points', 'relationship__created',
-            'relationship__last_activity'
-        )
+        return AppUserModel.objects.all()
 
     @extend_schema(summary="List customers with filtering")
     def list(self, request, *args, **kwargs):
-        start_time = time.time()
-        queries_before = len(connection.queries)
+        start_time = time.process_time()
+        start_queries = len(connection.queries)
 
         CustomerFilter(request.GET)
         response = super().list(request, *args, **kwargs)
 
-        execution_time = time.time() - start_time
-        query_count = len(connection.queries) - queries_before
+        execution_time = round((time.perf_counter() - start_time), 3)
+        query_count = len(connection.queries) - start_queries
 
         if isinstance(response.data, dict) and 'results' in response.data:
             response.data['performance'] = {
-                'execution_time': f"{execution_time:.3f}s",
+                'execution_time': f"{execution_time}s",
                 'query_count': query_count,
                 'total_records': response.data.get('count', 0)
             }

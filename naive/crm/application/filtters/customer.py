@@ -3,11 +3,12 @@ import datetime
 import django_filters
 from django.db import models
 
+from crm.domain.value_objects import Gender
 from crm.infrastructure.models import AppUserModel
 
 
 class CustomerFilter(django_filters.FilterSet):
-    gender = django_filters.ChoiceFilter(choices=[('M', 'Male'), ('F', 'Female'), ('O', 'Other')])
+    gender = django_filters.ChoiceFilter(choices=Gender.choices())
     customer_id = django_filters.CharFilter(field_name='customer_id', lookup_expr='icontains')
     phone_number = django_filters.CharFilter(field_name='phone_number', lookup_expr='icontains')
     has_relationship = django_filters.BooleanFilter(field_name='relationship', method='filter_has_relationship')
@@ -20,7 +21,7 @@ class CustomerFilter(django_filters.FilterSet):
     city = django_filters.CharFilter(field_name='address__city', lookup_expr='icontains')
     city_code = django_filters.CharFilter(field_name='address__city_code', lookup_expr='icontains')
     street = django_filters.CharFilter(field_name='address__street', lookup_expr='icontains')
-    street_number = django_filters.CharFilter(field_name='address__street_num', lookup_expr='icontains')
+    street_number = django_filters.CharFilter(field_name='address__street_number', lookup_expr='icontains')
     birthday = django_filters.IsoDateTimeFromToRangeFilter(
         field_name='birthday',
         help_text=str(datetime.datetime.now().date().isoformat())

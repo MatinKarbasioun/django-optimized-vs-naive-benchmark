@@ -2,8 +2,8 @@ from django.db import models
 from django.utils import timezone
 
 from crm.infrastructure.models import AddressModel
-from shared.infrastructure.models.base import ExternalModel
 from crm.domain.value_objects.gender import Gender
+from shared.base import ExternalModel
 
 
 class AppUserModel(ExternalModel):
@@ -18,7 +18,9 @@ class AppUserModel(ExternalModel):
     birthday = models.DateField(null=True, blank=True)
     last_updated = models.DateTimeField(default=timezone.now)
 
-    class Meta(ExternalModel.Meta):
+    class Meta:
+        managed = True
+        abstract = False
         db_table = 'app_user'
         verbose_name_plural = 'app_users'
         indexes = [

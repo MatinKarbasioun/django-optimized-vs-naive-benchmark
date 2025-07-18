@@ -16,7 +16,8 @@ ROOT_URLCONF = 'crm_optimized.urls'
 DATABASES = {
     'default': dj_database_url.parse(
         config('DATABASE_URL'),
-        conn_health_checks=True
+        conn_health_checks=True,
+        conn_max_age=60
     )
 }
 

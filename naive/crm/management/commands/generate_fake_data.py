@@ -6,6 +6,7 @@ from django.utils import timezone
 from faker import Faker
 import random
 
+from crm.domain.value_objects import Gender
 from crm.infrastructure.models import AddressModel, AppUserModel, CustomerRelationshipModel
 
 
@@ -63,7 +64,7 @@ class Command(BaseCommand):
                 customer = AppUserModel(
                     first_name=fake.first_name(),
                     last_name=fake.last_name(),
-                    gender=random.choice(['M', 'F', 'O']),
+                    gender=random.choice(Gender.get_genders()),
                     customer_id=uuid.uuid4().hex,
                     phone_number=fake.phone_number()[:20],
                     birthday=fake.date_of_birth(minimum_age=18, maximum_age=80),

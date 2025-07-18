@@ -2,7 +2,7 @@ from django.utils import timezone
 
 from django.db import models
 
-from shared.infrastructure.models.base import ExternalModel
+from shared.base import ExternalModel
 
 
 class CustomerRelationshipModel(ExternalModel):
@@ -12,7 +12,9 @@ class CustomerRelationshipModel(ExternalModel):
     created = models.DateTimeField(auto_now_add=True)
     last_activity = models.DateTimeField(default=timezone.now)
 
-    class Meta(ExternalModel.Meta):
+    class Meta:
+        managed = True
+        abstract = False
         db_table = 'customer_relationship'
         verbose_name_plural = 'relations'
         indexes = [
