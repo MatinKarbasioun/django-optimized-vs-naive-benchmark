@@ -1,9 +1,9 @@
 from django.contrib.postgres.indexes import GinIndex
-from django.contrib.postgres.search import SearchVector, SearchVectorField
+from django.contrib.postgres.search import SearchVectorField
 from django.db import models
 from django.utils import timezone
 
-from crm.infrastructure.db import CachingManager
+from shared.utils.db import CachingManager
 from crm.infrastructure.models import AddressModel
 from crm.domain.value_objects.gender import Gender
 from shared.infrastructure.models import ExternalModel
@@ -11,10 +11,10 @@ from shared.infrastructure.models import ExternalModel
 
 class AppUserModel(ExternalModel):
     id = models.BigAutoField(primary_key=True)
-    first_name = models.CharField(max_length=128, null=False, blank=False, db_index=True)
-    last_name = models.CharField(max_length=128, null=False, blank=False, db_index=True)
-    gender = models.CharField(max_length=12, choices=Gender.choices(), default=Gender.UNDEFINED, db_index=True)
-    customer_id = models.CharField(max_length=32, unique=True, db_index=True)
+    first_name = models.CharField(max_length=128, null=False, blank=False)
+    last_name = models.CharField(max_length=128, null=False, blank=False)
+    gender = models.CharField(max_length=12, choices=Gender.choices(), default=Gender.UNDEFINED)
+    customer_id = models.CharField(max_length=32, unique=True)
     phone_number = models.CharField(max_length=32, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     address = models.ForeignKey(AddressModel, on_delete=models.CASCADE, null=True, blank=True, related_name='app_user')
@@ -33,9 +33,13 @@ class AppUserModel(ExternalModel):
         db_table = 'app_user'
         verbose_name_plural = 'app_users'
         indexes = [
-            models.Index(fields=['created', 'gender']),
-            models.Index(fields=['first_name', 'last_name']),
+            models.Index(fields=['last_name']),
+            models.Index(fields=['address']),
             models.Index(fields=['birthday']),
+            models.Index(fields=['last_updated']),
+            models.Index(fields=['phone_number']),
+            models.Index(fields=['first_name', 'last_name']),
+            models.Index(fields=['created', 'gender']),
             GinIndex(fields=['search_vector']),
         ]
 

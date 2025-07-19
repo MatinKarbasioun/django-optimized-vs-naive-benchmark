@@ -5,23 +5,21 @@ from shared.infrastructure.models import ExternalModel
 
 class AddressModel(ExternalModel):
     id = models.BigAutoField(primary_key=True)
-    street = models.CharField(max_length=128)
-    street_number = models.CharField(max_length=32)
-    city_code = models.CharField(max_length=32, db_index=True)
-    city = models.CharField(max_length=64, db_index=True)
-    country = models.CharField(max_length=32, db_index=True)
+    street = models.CharField(max_length=128, null=True, blank=True)
+    street_number = models.CharField(max_length=32, null=True, blank=True)
+    city_code = models.CharField(max_length=32)
+    city = models.CharField(max_length=64)
+    country = models.CharField(max_length=32)
 
     class Meta:
         managed = True
         db_table = 'address'
         verbose_name_plural = 'addresses'
         indexes = [
+            models.Index(fields=['country']),
             models.Index(fields=['city', 'country']),
             models.Index(fields=['street', 'street_number']),
-            models.Index(fields=['street', 'city']),
-            models.Index(fields=['city']),
-            models.Index(fields=['country']),
-            models.Index(fields=['street']),
+            models.Index(fields=['street', 'city'])
         ]
         abstract = False
 

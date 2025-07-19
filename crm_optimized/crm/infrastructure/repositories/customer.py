@@ -3,8 +3,9 @@ from typing import Optional
 from django.core.cache import cache
 from django.db.models import Q, QuerySet, Case, When
 
-from crm.application.query import SortField, Ordering
+from crm.application.schemas.sorting import SortField, Ordering
 from crm.application.utils import generate_cache_key
+from crm.application.utils.app_settings import AppSettings
 from crm.domain.entities import Customer
 from crm.domain.repositories import ICustomerRepository
 from crm.infrastructure.extensions import CustomerToModel, ModelToCustomer, ToPrefix, ToQuery
@@ -13,11 +14,15 @@ from shared.utils import handle_db_operation
 
 
 class CustomerRepository(ICustomerRepository):
+    def __init__(self):
+        self.__cache_key = AppSettings.APP_SETTINGS['cashing']['keys']['customer_cache']
 
     async def add(self, customer: Customer):
         model = customer @ CustomerToModel()
         await handle_db_operation(lambda: model.asave())
         customer.id = model.id
+        customer.created = model.created
+        customer.last_updated = model.last_updated
 
     async def remove(self, customer_id: int) -> bool:
         result = await handle_db_operation(lambda: AppUserModel.objects.get(id=customer_id).adelete())
@@ -52,7 +57,7 @@ class CustomerRepository(ICustomerRepository):
         sorting_field = sorted_by @ ToQuery()
         ordering_field = f'{ordering_prefix}{sorting_field}'
 
-        cached_key = generate_cache_key(queries, sorting_field, ordering_field)
+        cached_key = generate_cache_key(self.__cache_key, queries, sorting_field, ordering_field)
         cached_pks = await cache.aget(cached_key)
 
         if cached_pks is not None:

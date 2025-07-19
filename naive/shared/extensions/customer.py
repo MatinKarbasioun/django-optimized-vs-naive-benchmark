@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
 
-from crm.application.command import CreateCustomerCommand
+from crm.views.command import CreateCustomerCommand
 from crm.domain.entities import Customer, Address
 
 

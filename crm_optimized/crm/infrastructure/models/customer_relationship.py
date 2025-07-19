@@ -19,11 +19,15 @@ class CustomerRelationshipModel(ExternalModel):
         verbose_name_plural = 'relations'
         indexes = [
             models.Index(fields=['points', 'last_activity']),
+            models.Index(fields=['appuser']),
+            models.Index(fields=['last_activity'])
         ]
 
     def __str__(self):
-        return {f"{self.appuser.first_name} {self.appuser.last_name} with points: {self.points}" }
+        return f"{self.appuser.first_name} {self.appuser.last_name} with points: {self.points}"
 
     def __repr__(self):
-        return {f"{self._meta.db_table} {self.id} {self.appuser.first_name} {self.appuser.last_name} "
-                f"with points: {self.points}" }
+        return (
+            f"{self._meta.db_table} {self.id} {self.appuser.first_name} {self.appuser.last_name} "
+                f"with points: {self.points}"
+        )

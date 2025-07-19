@@ -1,4 +1,4 @@
-from crm.application.command import CreateAddressCommand
+from crm.views.command import CreateAddressCommand
 from crm.domain.entities import Address
 
 

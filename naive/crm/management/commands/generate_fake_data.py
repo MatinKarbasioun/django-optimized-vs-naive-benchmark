@@ -6,8 +6,8 @@ from django.utils import timezone
 from faker import Faker
 import random
 
-from crm.domain.value_objects import Gender
-from crm.infrastructure.models import AddressModel, AppUserModel, CustomerRelationshipModel
+from crm.value_objects import Gender
+from crm.models import AddressModel, AppUserModel, CustomerRelationshipModel
 
 
 class Command(BaseCommand):

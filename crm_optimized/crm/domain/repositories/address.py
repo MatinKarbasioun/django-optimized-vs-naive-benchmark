@@ -7,10 +7,10 @@ from crm.domain.entities import Address
 class IAddressRepository(ABC):
 
     @abstractmethod
-    def add(self, address: Address):
+    async def add(self, address: Address):
         raise NotImplementedError()
 
     @abstractmethod
-    def find_by_id(self, address_id: int) -> Optional[Address]:
+    async def find_by_id(self, address_id: int) -> Optional[Address]:
         raise NotImplementedError()
 

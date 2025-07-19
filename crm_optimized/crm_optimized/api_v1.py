@@ -6,7 +6,7 @@ api_v1 = CustomNinjaAPI(
     title="Optimized CRM API",
     description='Optimized CRM API with Medium Performance',
     docs=CustomSwagger(),
-    docs_url='swagger',
+    docs_url='swagger/',
     version="1.0.0",
 )
 

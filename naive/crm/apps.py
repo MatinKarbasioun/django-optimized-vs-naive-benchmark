@@ -6,4 +6,4 @@ class CrmConfig(AppConfig):
     name = 'crm'
 
     def ready(self):
-        from .infrastructure import models
+        pass

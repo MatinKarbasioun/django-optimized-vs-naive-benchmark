@@ -1,4 +1,4 @@
-from crm.application.query.sorting import SortField
+from crm.application.schemas.sorting import SortField
 
 
 class ToQuery:

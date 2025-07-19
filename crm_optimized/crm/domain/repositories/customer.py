@@ -3,7 +3,7 @@ from typing import Optional, List
 
 from django.db.models import Q, QuerySet
 
-from crm.application.query import SortingSchema, Ordering, SortField
+from crm.application.schemas.sorting import Ordering, SortField
 from crm.domain.entities import Customer
 
 

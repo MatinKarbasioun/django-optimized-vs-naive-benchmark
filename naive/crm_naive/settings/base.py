@@ -61,7 +61,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'crm_naive.wsgi.application'
-ASGI_APPLICATION = 'crm_naive.asgi.application'
 
 
 # Logging

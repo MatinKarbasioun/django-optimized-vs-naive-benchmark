@@ -8,7 +8,7 @@ class CustomerRelationshipToModel:
 
     def __rmatmul__(self, relationship: CustomerRelationship) -> CustomerRelationshipModel:
         return CustomerRelationshipModel(
-            appuser=relationship.id,
+            appuser=self._customer_id,
             points=relationship.points
         )
 
