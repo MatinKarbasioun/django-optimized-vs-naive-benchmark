@@ -24,7 +24,7 @@ class CustomerViewSet(viewsets.ReadOnlyModelViewSet):
 
     @extend_schema(summary="List customers with filtering")
     def list(self, request, *args, **kwargs):
-        start_time = time.process_time()
+        start_time = time.perf_counter()
         start_queries = len(connection.queries)
 
         CustomerFilter(request.GET)

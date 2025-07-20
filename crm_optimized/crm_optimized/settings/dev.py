@@ -4,7 +4,7 @@ from decouple import Config, RepositoryEnv, Csv
 from .base import *
 
 
-config = Config(RepositoryEnv('.env.dev'))
+config = Config(RepositoryEnv(BASE_DIR.parent.joinpath('.env.dev')))
 
 SECRET_KEY = config("DJANGO_SECRET_KEY")
 
@@ -22,15 +22,20 @@ DATABASES = {
 }
 
 CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    "default": {
+        "BACKEND": config("CACHE_BACKEND", default="django.core.cache.backends.locmem.LocMemCache"),
+        "LOCATION": config("CACHE_LOCATION", default="unique-snowflake"),
+        "OPTIONS": {
+            "CLIENT_CLASS": config("CLIENT_CLASS", default=""),
+        },
+        "TIMEOUT": config("CACHE_TIMEOUT", cast=int, default=300),
     }
 }
 
 LOGGING['loggers'].update({
     'django.db.backends': {
             'handlers': ['console'],
-            'level': 'DEBUG',
+            'level': config('LOG_LEVEL', default='INFO'),
             'propagate': False,
         },
 })

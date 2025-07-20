@@ -85,10 +85,13 @@ class DataGenerator:
             if random.random() > 0.2:  # 80% have activity
                 days_ago = random.randint(1, 1095)
                 activity_time = timezone.now() - timedelta(days=days_ago)
+                points = random.randint(0, 50_000)
+            else:
+                points = 0
 
             relationships.append(CustomerRelationshipModel(
                 appuser_id=customer_id,
-                points=random.randint(0, 50_000),
+                points=points,
                 last_activity=activity_time
             ))
         return relationships

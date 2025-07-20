@@ -11,7 +11,7 @@ class AppUserModel(ExternalModel):
     first_name = models.CharField(max_length=128, null=False, blank=False)
     last_name = models.CharField(max_length=128, null=False, blank=False)
     gender = models.CharField(max_length=12, choices=Gender.choices(), default=Gender.UNDEFINED)
-    customer_id = models.CharField(max_length=32, unique=True)
+    customer_id = models.CharField(max_length=64, unique=True)
     phone_number = models.CharField(max_length=32, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     address = models.ForeignKey(AddressModel, on_delete=models.CASCADE, null=True, blank=True, related_name='app_user')

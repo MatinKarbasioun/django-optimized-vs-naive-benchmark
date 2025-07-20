@@ -62,9 +62,7 @@ class CustomerRepository(ICustomerRepository):
 
         if cached_pks is not None:
             preserved_order = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(cached_pks)])
-            return AppUserModel.objects.select_related('address', 'relationship').filter(
-                pk__in=cached_pks
-            ).order_by(preserved_order)
+            return queryset.filter(pk__in=cached_pks).order_by(preserved_order)
 
         if queries:
             queryset = queryset.filter(queries)

@@ -3,7 +3,6 @@ from typing import Optional
 from django.db.models import QuerySet
 from kink import inject
 
-from crm.application.schemas import Customer
 from crm.application.handlers.customer_serach import CustomerSearchHandler
 from crm.application.schemas import CustomerSearchQuery
 from crm.domain.entities import Customer

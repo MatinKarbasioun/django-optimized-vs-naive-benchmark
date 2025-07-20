@@ -29,7 +29,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'crm'
+    'crm',
+    'ninja_extra'
 ]
 
 MIDDLEWARE = [
@@ -81,7 +82,7 @@ LOGGING = {
     'loggers': {
         'crm': {
             'handlers': ['console'],
-            'level': 'INFO',
+            'level': 'DEBUG',
             'propagate': True,
         }
     }

@@ -23,12 +23,12 @@ DATABASES = {
 
 CACHES = {
     "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": config("REDIS_URL"),
+        "BACKEND": config("CACHE_BACKEND"),
+        "LOCATION": config("CACHE_LOCATION"),
         "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "CLIENT_CLASS": config("CLIENT_CLASS"),
         },
-        "TIMEOUT": config("REDIS_TIMEOUT", cast=int, default=300),
+        "TIMEOUT": config("CACHE_TIMEOUT", cast=int, default=300),
     }
 }
 

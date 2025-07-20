@@ -1,4 +1,5 @@
 import datetime
+import re
 from typing import Optional
 
 from django.contrib.postgres.search import SearchQuery
@@ -12,10 +13,20 @@ from crm.domain.value_objects import Gender
 class SearchFilter(FilterSchema):
     search: Optional[str] = None
 
-    @classmethod
-    def filter_search(cls, value: str) -> Q:
+    def filter_search(self, value: str) -> Q:
         if not value:
             return Q()
 
-        query = SearchQuery(value, search_type='websearch')
-        return Q(search_vector=query)
+        query = Q(search_vector=SearchQuery(value, search_type='websearch'))
+
+        numeric_part = re.sub(r'\D', '', self.search)
+
+        if numeric_part:
+            numeric_query = (
+                    Q(phone_number__icontains=numeric_part) |
+                    Q(address__city_code__icontains=numeric_part) |
+                    Q(address__street_number__icontains=numeric_part)
+            )
+            query |= numeric_query
+
+        return query

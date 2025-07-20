@@ -1,5 +1,5 @@
 
-from crm.presentation.views.customer import customer_router
+from crm.controller.customer import CustomerController
 from shared.utils import CustomNinjaAPI, CustomSwagger
 
 api_v1 = CustomNinjaAPI(
@@ -10,4 +10,4 @@ api_v1 = CustomNinjaAPI(
     version="1.0.0",
 )
 
-api_v1.add_router("/customers/", customer_router, tags=["Customers"])
+api_v1.register_controllers(CustomerController)

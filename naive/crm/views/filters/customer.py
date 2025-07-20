@@ -8,8 +8,8 @@ from shared.contract import Gender
 
 
 class CustomerFilter(django_filters.FilterSet):
-    first_name = django_filters.ChoiceFilter(field_name='first_name', lookup_expr='icontains')
-    last_name = django_filters.ChoiceFilter(field_name='first_name', lookup_expr='icontains')
+    first_name = django_filters.CharFilter(field_name='first_name', lookup_expr='icontains')
+    last_name = django_filters.CharFilter(field_name='last_name', lookup_expr='icontains')
     gender = django_filters.ChoiceFilter(choices=Gender.choices())
     customer_id = django_filters.CharFilter(field_name='customer_id', lookup_expr='icontains')
     phone_number = django_filters.CharFilter(field_name='phone_number', lookup_expr='icontains')

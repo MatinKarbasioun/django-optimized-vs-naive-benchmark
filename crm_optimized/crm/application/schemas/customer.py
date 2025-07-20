@@ -1,9 +1,10 @@
 import datetime
 
 from ninja import ModelSchema, Schema, Field
-from typing import Optional
+from typing import Optional, List
 
 from crm.infrastructure.models import AppUserModel
+from shared.schemas import PerformanceSchema
 from .relationship import RelationshipSchema
 from .address import AddressSchema
 from ...domain.value_objects import Gender
@@ -38,3 +39,8 @@ class CreateCustomerCommand(Schema):
     initial_points: Optional[int] = Field(default=0)
 
 
+class PaginatedCustomerResponse(Schema):
+    next: Optional[str] = None
+    previous: Optional[str] = None
+    results: List[Customer]
+    performance: PerformanceSchema

@@ -5,11 +5,11 @@ from shared.infrastructure.models.base import ExternalModel
 
 class AddressModel(ExternalModel):
     id = models.BigAutoField(primary_key=True)
-    street = models.CharField(max_length=128, null=True, blank=True)
-    street_number = models.CharField(max_length=32, null=True, blank=True)
-    city_code = models.CharField(max_length=32)
-    city = models.CharField(max_length=64)
-    country = models.CharField(max_length=32)
+    street = models.CharField(max_length=256, null=True, blank=True)
+    street_number = models.CharField(max_length=256, null=True, blank=True)
+    city_code = models.CharField(max_length=256)
+    city = models.CharField(max_length=256)
+    country = models.CharField(max_length=128)
 
     class Meta(ExternalModel.Meta):
         db_table = 'address'

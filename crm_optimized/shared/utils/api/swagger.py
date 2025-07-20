@@ -1,8 +1,9 @@
 from django.http import HttpRequest, HttpResponse
-from ninja import NinjaAPI, Swagger
+from ninja import Swagger
+from ninja_extra import NinjaExtraAPI
 
 
-class CustomNinjaAPI(NinjaAPI):
+class CustomNinjaAPI(NinjaExtraAPI):
     apps_register = []
 
     def __init__(self, **kwargs) -> None:

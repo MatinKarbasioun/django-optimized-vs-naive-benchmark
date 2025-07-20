@@ -4,7 +4,7 @@ from typing import Any, Optional, List
 from django.db import connection, models
 from django.db.models import QuerySet
 from ninja import Schema, Field
-from ninja.pagination import PageNumberPagination
+from ninja_extra.pagination import PageNumberPagination
 
 from shared.schemas import PerformanceSchema
 
@@ -17,8 +17,10 @@ class CustomPagination(PageNumberPagination):
     class Output(Schema):
         next: Optional[str] = None
         previous: Optional[str] = None
-        items: List[Any]
+        results: List[Any]
         performance: PerformanceSchema
+
+    items_attribute: str = "results"
 
     async def apaginate_queryset(self, queryset: QuerySet, pagination: Any, **params: Any) -> Any:
         request = params.get("request")
@@ -62,6 +64,6 @@ class CustomPagination(PageNumberPagination):
         return {
             "next": next_url,
             "previous": previous_url,
-            "items": items,
+            "results": items,
             "performance": performance_data,
         }
