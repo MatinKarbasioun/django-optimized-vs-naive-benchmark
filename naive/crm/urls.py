@@ -4,8 +4,8 @@ from rest_framework.routers import DefaultRouter
 from crm.views.customer import CustomerViewSet
 
 router = DefaultRouter()
-router.register(r'v1/customers', CustomerViewSet, basename='customers')
+router.register(r'customers', CustomerViewSet, basename='customers')
 
 urlpatterns = [
-    path('api', include(router.urls)),
+    path('', include(router.urls)),
 ]

@@ -1,5 +1,5 @@
 """
-WSGI config for crm_naive project.
+WSGI config for crm_optimized project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 

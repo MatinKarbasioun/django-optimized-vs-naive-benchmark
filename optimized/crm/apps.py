@@ -7,3 +7,4 @@ class CrmConfig(AppConfig):
 
     def ready(self):
         from .infrastructure import models
+        from . import signals

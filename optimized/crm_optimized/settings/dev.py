@@ -4,7 +4,7 @@ from decouple import Config, RepositoryEnv, Csv
 from .base import *
 
 
-config = Config(RepositoryEnv('.env.dev'))
+config = Config(RepositoryEnv(BASE_DIR.parent.joinpath('.env.dev')))
 
 SECRET_KEY = config("DJANGO_SECRET_KEY")
 
@@ -22,15 +22,17 @@ DATABASES = {
 }
 
 CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "local-memcache-dev",
+        "TIMEOUT": 300
     }
 }
 
 LOGGING['loggers'].update({
     'django.db.backends': {
             'handlers': ['console'],
-            'level': 'DEBUG',
+            'level': config('LOG_LEVEL', default='INFO'),
             'propagate': False,
         },
 })

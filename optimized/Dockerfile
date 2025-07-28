@@ -4,9 +4,6 @@ FROM python:${PYTHON_VERSION}-slim as builder
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-# Create the app directory
-RUN mkdir /app
-
 # Set the working directory
 WORKDIR /app
 
@@ -18,28 +15,38 @@ COPY requirements.txt /app/
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-FROM python:python:${PYTHON_VERSION}-slim
+FROM python:${PYTHON_VERSION}-slim
+COPY --from=builder /usr/local/lib/python3.13/site-packages/ /usr/local/lib/python3.13/site-packages/
+COPY --from=builder /usr/local/bin/ /usr/local/bin/
 
+# Create non-root user
 ARG UID=10001
 RUN adduser \
     --disabled-password \
     --gecos "" \
-    --home "/nonexistent" \
-    --shell "/sbin/nologin" \
-    --no-create-home \
+    --home "/app" \
+    --shell "/bin/bash" \
     --uid "${UID}" \
     appuser
-
-# Copy the Python dependencies from the builder stage
-COPY --from=builder /usr/local/lib/python${PYTHON_VERSION}/site-packages/ /usr/local/lib/python${PYTHON_VERSION}/site-packages/
-COPY --from=builder /usr/local/bin/ /usr/local/bin/
 
 # Set the working directory
 WORKDIR /app
 
-# Copy application code
-COPY --chown=appuser:appuser . .
+# Copy project files
+COPY . .
 
+RUN mkdir -p /app/staticfiles && \
+    chown -R appuser:appuser /app && \
+    chmod -R 755 /app/staticfiles
+
+# Copy entrypoint script
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+# Create necessary directories
+RUN mkdir -p /app/staticfiles
+
+# Switch to non-root user
 USER appuser
 
 # Expose the application port

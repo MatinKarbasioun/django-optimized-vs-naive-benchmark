@@ -7,10 +7,10 @@ from crm.domain.entities import CustomerRelationship
 class ICustomerRelationshipRepository(ABC):
 
     @abstractmethod
-    def add(self, customer_id: int, relationship: CustomerRelationship):
-        pass
+    async def add(self, customer_id: int, relationship: CustomerRelationship):
+        raise NotImplementedError
 
     @abstractmethod
-    def find_by_customer_id(self, customer_id: int) -> Optional[CustomerRelationship]:
-        pass
+    async def find_by_customer_id(self, customer_id: int) -> Optional[CustomerRelationship]:
+        raise NotImplementedError
 

@@ -1,0 +1,10 @@
+{
+  "cashing": {
+    "keys": {
+      "customer_cache": "HelloAgain-Customer"
+    }
+  },
+  "business": {
+    "customer_id_prefix": "HelloAgain"
+  }
+}

@@ -6,8 +6,8 @@ from django.utils import timezone
 from faker import Faker
 import random
 
-from crm.value_objects import Gender
 from crm.models import AddressModel, AppUserModel, CustomerRelationshipModel
+from shared.contract import Gender
 
 
 class Command(BaseCommand):
@@ -87,8 +87,7 @@ class Command(BaseCommand):
 
             relationships = []
             for customer_id in selected_customers:
-                activity_time = timezone.make_aware(
-                    fake.date_time_between(start_date='-3y')) if random.random() > 0.2 else None
+                activity_time = timezone.make_aware(fake.date_time_between(start_date='-3y'))
 
                 relationships.append(CustomerRelationshipModel(
                     appuser_id=customer_id,

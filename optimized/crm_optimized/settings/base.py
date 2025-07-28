@@ -9,8 +9,7 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
-import os
-import uuid
+
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -19,6 +18,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
+
 
 # Application definition
 
@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'crm',
+    'ninja_extra'
 ]
 
 MIDDLEWARE = [
@@ -41,6 +42,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
 
 TEMPLATES = [
     {
@@ -57,9 +59,9 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'crm_optimized.wsgi.application'
-ASGI_APPLICATION = 'crm_optimized.asgi.application'
+ASGI_APPLICATION = 'crm_optimized.wsgi.application'
 
+# Logging
 
 # Logging
 LOGGING = {
@@ -80,15 +82,15 @@ LOGGING = {
     'loggers': {
         'crm': {
             'handlers': ['console'],
-            'level': 'INFO',
+            'level': 'DEBUG',
             'propagate': True,
         }
     }
 }
+
+
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
-
-
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -128,3 +130,4 @@ STATIC_ROOT = BASE_DIR.parent.joinpath('staticfiles')
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+

@@ -14,7 +14,8 @@ class Customer:
     last_name: str
     gender: Gender
     customer_id: str
-    created: datetime
     birthday: datetime.date
-    address: Optional[Address] = None
-    relationship: Optional[CustomerRelationship] = None
+    address: Optional[Address]
+    relationship: Optional[CustomerRelationship]
+    created: Optional[datetime]
+    last_updated: Optional[datetime.datetime]

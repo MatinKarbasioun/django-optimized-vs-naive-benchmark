@@ -11,7 +11,7 @@ DEBUG = config("DEBUG", cast=bool, default=False)
 
 ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast=Csv())
 
-ROOT_URLCONF = 'crm_optimized.urls'
+ROOT_URLCONF = 'crm_optimized.urls.urls'
 
 DATABASES = {
     'default': dj_database_url.parse(
@@ -23,11 +23,16 @@ DATABASES = {
 
 CACHES = {
     "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/1",
+        "BACKEND": config("CACHE_BACKEND"),
+        "LOCATION": config("CACHE_LOCATION"),
         "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "CLIENT_CLASS": config("CACHE_CLIENT"),
         },
+        "TIMEOUT": config("CACHE_TIMEOUT", cast=int, default=300),
+        "CONNECTION_POOL_KWARGS": {
+            "max_connections": 100,
+            "timeout": 20,
+        }
     }
 }
 

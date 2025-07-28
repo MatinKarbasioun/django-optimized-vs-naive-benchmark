@@ -1,4 +1,4 @@
-from crm.application.query import Ordering
+from crm.application.schemas.sorting import Ordering
 
 
 class ToPrefix:

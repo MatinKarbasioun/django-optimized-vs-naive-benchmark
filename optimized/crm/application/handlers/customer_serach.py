@@ -3,7 +3,7 @@ import logging
 from django.db.models import QuerySet
 from kink import inject
 
-from crm.application.query import CustomerSearchQuery
+from crm.application.schemas import CustomerSearchQuery
 from crm.domain.repositories import ICustomerRepository
 from crm.domain.exceptions import CustomerInvalidDataException
 

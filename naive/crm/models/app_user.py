@@ -21,7 +21,6 @@ class AppUserModel(ExternalModel):
     class Meta(ExternalModel.Meta):
         db_table = 'app_user'
         verbose_name_plural = 'app_users'
-        ordering = ['-created']
 
     def __str__(self):
         return f'{self.first_name} {self.last_name} with customer id: {self.customer_id}'
