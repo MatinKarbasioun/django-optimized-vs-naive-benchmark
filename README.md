@@ -64,34 +64,34 @@ approaches to get the better performance to serve in a scalable environment.
 
 ## Key Optimizations
 
-### Asynchronous Request Handling
+### 1. Asynchronous Request Handling
 In order to handle heavy and high number of request at the lowest time, I use django async 
 capabilities alongside using django ninja for controllers and async pagination.
 Also, I use uvicorn to serve application by ASGI instead of WSGI.
 
-### Query Optimization
+### 2. Query Optimization
 The **`select_related`** method is used to fetch related objects in a single database query.
 Use search_related for two foreign keys and enhance request and prevent n+1 queries by using left and inner join.
 
-###  Database Indexing
+###  3. Database Indexing
 Use database indexing to improve retrieve frequently query fields.
 Also add related fields to improve the query performance. Although this can create overhead for writing 
 operation.
 
-### Cursor-Based Pagination
+### 4. Cursor-Based Pagination
 Remove the extensive counts on large dataset queryset and pagination and instead I use cursor base pagination.
 This is kind of customized pagination and just show next or previous if applicable and the current data sets.
 Use special strategy for pagination and prevent to expensive cost COUNT(*) query of my queryset and just show next and before page 
 token similar to twitter
 
-### PostgreSQL Full-Text Search Capability (FTS)
+### 5. PostgreSQL Full-Text Search Capability (FTS)
 To enhance search performance, PostgreSQL's `SearchVector` is used.<br>
 Use `SearchVector` capability of Postgresql to improve search speed by create weighted text and use 
 Text search engine of postgresql, but it can be trade-off because it can help increase text search in a fast pace 
 but create a little overhead on writing to create search vector and not fully appropriate for numerical search, 
 therefore, I create customize search which integrated of SearchVector alongside query search for numerical field.
 
-### Caching
+### 6. Caching
 Use cache strategy by employing redis to reduce database hits for repeated queries, and because our output not be user dependent, I don’t use any kind of cache based on header or user agents, or authentication token:
 - Cache data based on request
 - Delete cache based on delete, update, or insert new data on database by using signals
