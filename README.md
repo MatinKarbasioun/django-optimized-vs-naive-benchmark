@@ -2,35 +2,47 @@
 
 In order to show difference between performance and optimization on django project for scalable usage, I tried to have two different implementations.
 
-1- <b>Naive implementation (Synchronize):<b><br>
-    This is synchronize, robust, django MVC structure, and simple implementation by using the following 
-packages without any optimization.
-
-- django rest framework (DRF)
-- drf-spectacular (OpenAPI documentation for DRF)
-- psycopg (psycopg 3)
-- DRF Filter, search, ordering
-- gunicorn
-
-2- <b>Optimized implementation:<b><br>
-The second implementation is an asynchronize application which is based on domain driven design.
-I tried to optimize this implementation and the following 
-packages are used in this implementation.
-
-- django ninja (Async view, paginator, filtering and OpenAPI documentation)
-- django ninja extra (Dependency injection, async permission, class-based view)
-- django ninja filtering
-- pydantic
-- django async redis (for redis caching)
-- kink (for dependency injection)
-- psycopg (psycopg 3)
-- uvicorn
+<ol>
+    <li>
+        <h4>Naive implementation (Synchronous):</h3>
+        <p>
+            This is synchronous, robust, django MVC structure, and simple implementation by using the following 
+            packages without any optimization.
+        </p>
+        <ul style="type⚫">
+            <li>django rest framework (DRF)</li>
+            <li>django rest framework (DRF)</li>
+            <li>drf-spectacular (OpenAPI documentation for DRF)</li>
+            <li>psycopg (psycopg 3)</li>
+            <li>DRF Filter, search, ordering</li>
+            <li>gunicorn</li>
+        </ul>
+    </li>
+    <li>
+        <h4>Optimized implementation (Asynchronous):</h3>
+        <p>
+            The second implementation is an asynchronous application which is based on domain driven design.<br>
+            I tried to optimize this implementation and the following packages are used in this implementation.
+        </p>
+        <ul style="type⚫">
+            <li>django ninja (Async view, paginator, filtering and OpenAPI documentation)</li>
+            <li>django ninja extra (Dependency injection, async permission, class-based view)</li>
+            <li>django ninja filtering</li>
+            <li>pydantic</li>
+            <li>django async redis (for redis caching)</li>
+            <li>kink (for dependency injection)</li>
+            <li>psycopg (psycopg 3)</li>
+            <li>uvicorn</li>
+        </ul>
+    </li>
+</ol>
 
 ---
 
 # Implementation
 
 I use postgresql as my main database in this project and use psycopg 3 library for connect to db. It supports both sync and async implementation.
+
 ## Naive
 For the naive implementation, I don't use any optimization. I just use database and django rest framework to achieve
 and show data model and expected behaviour in the naivest and simple way.
