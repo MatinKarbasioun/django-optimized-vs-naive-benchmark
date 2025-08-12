@@ -1,182 +1,248 @@
-# Optimized Django Backend 
+# django-optimized-vs-naive-benchmark
 
-In order to show difference between performance and optimization on django project for scalable usage, I tried to have two different implementations.
-
-<ol>
-    <li>
-        <h4>Naive implementation (Synchronous):</h3>
-        <p>
-            This is synchronous, robust, django MVC structure, and simple implementation by using the following 
-            packages without any optimization.
-        </p>
-        <ul style="type⚫">
-            <li>django rest framework (DRF)</li>
-            <li>django rest framework (DRF)</li>
-            <li>drf-spectacular (OpenAPI documentation for DRF)</li>
-            <li>psycopg (psycopg 3)</li>
-            <li>DRF Filter, search, ordering</li>
-            <li>gunicorn</li>
-        </ul>
-    </li>
-    <li>
-        <h4>Optimized implementation (Asynchronous):</h3>
-        <p>
-            The second implementation is an asynchronous application which is based on domain driven design.<br>
-            I tried to optimize this implementation and the following packages are used in this implementation.
-        </p>
-        <ul style="type⚫">
-            <li>django ninja (Async view, paginator, filtering and OpenAPI documentation)</li>
-            <li>django ninja extra (Dependency injection, async permission, class-based view)</li>
-            <li>django ninja filtering</li>
-            <li>pydantic</li>
-            <li>django async redis (for redis caching)</li>
-            <li>kink (for dependency injection)</li>
-            <li>psycopg (psycopg 3)</li>
-            <li>uvicorn</li>
-        </ul>
-    </li>
-</ol>
+Compare a **naive synchronous** Django API with an **optimized asynchronous** Django API under identical workloads.  
+The domain of both implementation and their endpoints are the same and differences are about the design and performance optimization.
 
 ---
 
-# Implementation
+## Overview
 
-I use postgresql as my main database in this project and use psycopg 3 library for connect to db. It supports both sync and async implementation.
+This repository demonstrates how design choices affect **throughput**, **latency**, and **scalability** in Django:
 
-## Naive
-For the naive implementation, I don't use any optimization. I just use database and django rest framework to achieve
-and show data model and expected behaviour in the naivest and simple way.
-I use DRF capabilities like ordering, filtering, and search, and paginator to
-do our expected behaviour.
+- **Naive (Synchronous):** popular Django + DRF, easy to read and extend and use popular and common libraries
+- **Optimized (Asynchronous):** domain-driven design (DDD), async views, Redis caching, keyset pagination, and query optimization, and database capabaility (Using FTS of PostgreSql)
 
-I use the django base structure for this project and try to do everythings close to django
-documentations.
-
-## Optimized
-In the second implementation, Use domain driven design (ddd) approach to have clean architecture 
-for further development and become close to business domain language and more testable and separate architectural concerns 
-
-In order to get the better performance based on our expectations, I use the following
-approaches to get the better performance to serve in a scalable environment.
-
+Both implementations target the same features in order to benchmarking capability with **k6**, **pytest-benchmark**, and integration tests.
 
 ---
 
-## Key Optimizations
+## Repository Layout
 
-* ### Asynchronous Request Handling
-In order to handle heavy and high number of request at the lowest time, I use django async 
-capabilities alongside using django ninja for controllers and async pagination.
-Also, I use uvicorn to serve application by ASGI instead of WSGI.
-
-* ### Query Optimization
-The **`select_related`** method is used to fetch related objects in a single database query.
-Use search_related for two foreign keys and enhance request and prevent n+1 queries by using left and inner join.
-
-* ### Database Indexing
-Use database indexing to improve retrieve frequently query fields.
-Also add related fields to improve the query performance. Although this can create overhead for writing 
-operation.
-
-* ### Cursor-Based Pagination
-Remove the extensive counts on large dataset queryset and pagination and instead I use cursor base pagination.
-This is kind of customized pagination and just show next or previous if applicable and the current data sets.
-Use special strategy for pagination and prevent to expensive cost `COUNT(*)` query of my queryset and just show next and before page 
-token similar to twitter
-
-* ### PostgreSQL Full-Text Search Capability (FTS)
-To enhance search performance, PostgreSQL's `SearchVector` is used.<br>
-Use `SearchVector` capability of Postgresql to improve search speed by create weighted text and use 
-Text search engine of postgresql, but it can be trade-off because it can help increase text search in a fast pace 
-but create a little overhead on writing to create search vector and not fully appropriate for numerical search, 
-therefore, I create customize search which integrated of SearchVector alongside query search for numerical field.
-
-* ### Caching
-Use cache strategy by employing redis to reduce database hits for repeated queries, and because our output not be user dependent, I don’t use any kind of cache based on header or user agents, or authentication token:
-- Cache data based on request
-- Delete cache based on delete, update, or insert new data on database by using signals
-- I use redis cache for production only and use `LocalMemCache` for dev purpose for simplicity, and it causes to use
-`aclear()` for clear cache by signal, but in production-ready application, it is preferred to use wild-card pattern 
-and `delete_pattern()` to prevent other keys from remove
-- I choose to cache the primary keys of the requested data to reduce database queries and load and efficient memory usage but I create another async decorator for view level caching that If it is necessary we can use it but it less memory efficient but reduce database hits.
-- I use a db manager to add caching strategy
+```
+.
+├─ naive/                 # DRF-based, synchronous implementation (baseline)
+│  ├─ DockerFile
+│  ├─ compose.yml
+│  ├─ .env
+│  ├─ .env.dev
+│  ├─ load_test.js
+│  └─ ...
+├─ optimized/            # django-ninja-based, asynchronous implementation (DDD)
+│  ├─ DockerFile
+│  ├─ compose.yml
+│  ├─ .env
+│  ├─ .env.dev
+│  ├─ load_test.js
+│  └─ ...
+└─ media/                       # benchmark results: results screenshots
+```
 
 ---
 
-## Performance Testing
+## Tech Stack
 
- In order to test my codes I use three different tools based on the test purpose.
+**Naive (Sync)**
+- Django
+- **Django REST Framework (DRF)** (Powerful RestFul API tookit for building django APIs, serialization, viewsets, routres, pagination and much more features)
+- drf-spectacular (OpenAPI Swagger)
+- DRF filters for (search/ordering)
+- gunicorn (WSGI)
 
-- Integration testing (by pytest) (to test behavioural functionality)
-- Benchmark Testing (by Pytest-benchmark) 
-- Load & Stress Testing (By Grafana K6)
+**Optimized (Async)**
+- Django
+- **django-ninja** (async web framework for building APIs with django, pydantic data validation and management, pagination, filtering, Built-in OpenAPI Swagger, )
+- django-ninja-extra (dependency injection, async permissions, CBVs)
+- pydantic
+- **django-async-redis** (Redis caching)
+- kink (DI container)
+- **uvicorn** (ASGI)
 
-### Integration Test
+**Common**
+- PostgreSQL (Database)
+- psycopg3 (PostgreSQL sync & async with session pool capabality)
+- Docker / Docker Compose
+- **k6** (load), **pytest** (integration), **pytest-benchmark** (micro-bench)
+
+---
+
+## Design & Approach
+
+- **Naive (Sync):** Baseline aligned with Django docs—straightforward `models / views / serializers`. Uses DRF for filtering, search, ordering, and pagination.
+- **Optimized (Async):** Domain Driven Design (DDD)-inspired boundaries for testability and maintainability. Async endpoints via django-ninja and targeted performance improvements:
+
+  - **ASGI + async views** for high I/O concurrency
+  - **Query Optimization**: `select_related` / `prefetch_related` to avoid N+1
+  - **Focused DB indexing** on commonn filter/sort fields
+  - **Cursor (keyset) pagination** to avoid expensive `COUNT(*)`
+  - **PostgreSQL FTS** with `SearchVector` for weighted text search by Postgresql Text Search Engine
+  - **Redis caching** with signal-based invalidation on create/update/delete for most common queries
+
+---
+
+## Prerequisites
+
+- Docker & Docker Compose
+- (Optional) Python 3.11+ for local (non-Docker) runs
+- (Optional) k6 for load tests: https://k6.io/docs/get-started/installation/
+
+---
+
+## Quick Start (Docker)
+
+Run each implementation independently. For side-by-side comparison, map them to different ports.
+
+### Naive (sync)
+
+```bash
+cd naive
+cp .env .env
+# (optional) change port mappings in docker-compose.yml if 8001 is taken
+docker compose up --build -d
+```
+
+### Optimized (async)
+
+```bash
+cd optimized
+cp .env .env
+# (optional) change port mappings (e.g., 8000)
+docker compose up --build -d
+---
+
+## Generate Test Data (3M records)
+
+Both apps include a management command (Faker) to seed the database.
+
+```bash
+#  Replace `<app_container>` with the container name from `docker ps
+
+docker exec -it <app_container>   python manage.py generate_fake_data --customers 3_000_000 --worker 4
+```
+
+**Tip:** If resources are limited, start smaller: `--customers 300_000`.
+
+---
+
+## Endpoints & API Docs
+
+- **Naive (sync):**
+  - App: `http://127.0.0.1:8001/`
+  - Docs: `http://127.0.0.1:8001/api/swagger`
+
+- **Optimized (async):**
+  - App: `http://127.0.0.1:8000/` *(or your configured port)*
+  - Docs: `http://127.0.0.1:8000/api/swagger`
+
+---
+
+## Tests & Benchmarks
+
+**Integration tests**
+
+```bash
+docker exec -it <app_container> pytest -q
+```
+
 ![Functionallity Test](media/pytest-functionality.png)
 
-### Benchmark Testing
+**Micro-benchmarks**
+
+```bash
+docker exec -it <app_container> pytest -q tests --benchmark-only
+```
 
 ![Benchmark Test](media/benchmark.png)
 
-### Load & Stress Test
-First, I create 3 million records by using Faker and create a django command 
-based on it. This db is shared among two project.
-Also, I use docker for database, also I use redis and nginx in optimized implementation.
-In naive implementation, I just use nginx to serve files and as reverse proxy and PostgreSQL db.
-Then use k6 for 50 users in 2 and half minutes with 3 scenario and the same endpoints of two projects.
-Based on the results that show as the following:
+**Load & stress with k6**
+
+```bash
+# run from within each project folder
+k6 run load_test.js
+```
+
+Compare **RPS**, **p95 latency**, **error rate**, and **throughput** across both implementations.  
 
 #### Naive
+
 ![Naive K6 1](media/k6-naive-1.png)
+
 ![Naive K6 2](media/k6-naive-2.png)
+
 ![Naive K6 3](media/k6-naive-3.png)
+
+
 
 #### Optimized
 
+
 ![Optimized K6 1](media/k6-optimized-1.png)
+
 ![Optimized K6 2](media/k6-optimized-2.png)
 
+---
 
-As the result we can see the much and higher performance of the same query and search in the optimized implementation
-rather than naive one. 
+## Configuration
 
-## How to Run
+Each project ships a `.env`. Copy and adjust:
 
-In order to run project, there are two different folder and each one has their own docker and
-docker compose file.
-After enter the target project,
+```dotenv
+# security
+SECURE_SSL_REDIRECT=False
+SESSION_COOKIE_SECURE=False
+CSRF_COOKIE_SECURE=False
 
-Run:
-```shell
-docker compose up --build -d
+# Common
+POSTGRES_DB=app
+POSTGRES_USER=app
+POSTGRES_PASSWORD=app
+POSTGRES_HOST=db
+POSTGRES_PORT=5432
+
+# Django
+DEBUG=False
+DJANGO_SECRET_KEY=change-me
+LOG_LEVEL=INFO
+ALLOWED_HOSTS='localhost, 127.0.0.1'
+
+# Cache (optimized only)
+REDIS_URL=redis://redis:6379/0
+CACHE_LOCATION=redis://redis:6379/0
+CACHE_TIMEOUT=300
 
 ```
 
-Then in order to generate fake customer data, each project has its own command and has
-some difference between them. So then 
+**Dev cache maintenance**  
+If using a Redis container:
 
-Run:
-
-```shell
-docker exec -it <app container name> python manage.py generate_fake_data --customers 3_000_000 --worker 4
-
+```bash
+docker exec -it <redis_container> redis-cli FLUSHALL
 ```
 
-and then on the following address, application ready to use.
+---
 
-```shell
-127.0.0.1:8000
-```
+## Troubleshooting
 
-in order to use documentation (for both projects), you can use:
+- **Port in use:** Change `APP_PORT` in `.env` or `ports` in `docker-compose.yml`.
+- **Memory pressure on 3M rows:** Seed fewer records, allocate more RAM/CPU to Docker, or tune Postgres shared buffers.
+- **k6 missing:** Install locally or run via container:
+  ```bash
+  docker run --rm -i grafana/k6 run - < load_test.js
+  ```
+- **DB connection errors:** Verify `POSTGRES_*` variables; ensure DB container is healthy and app waits for DB.
 
-```shell
-127.0.0.1:8000/api/swagger
-```
+---
+
+## Why this project?
+
+- Provide a **clear, reproducible comparison** between a conventional DRF app and an optimized async/DDD design.
+- Offer **drop-in patterns** (keyset pagination, FTS, caching, query tuning) for real projects.
+- Show **measurable impact** using synthetic 3M-row datasets and standard tooling.
+
+---
+
+## License
+
+MIT (see `LICENSE`).
 
 
-Also in order to run K6 load test, you can use
 
-```shell
-k6 run load_test.js
-```
